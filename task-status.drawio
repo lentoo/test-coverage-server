@@ -1,0 +1,46 @@
+<mxfile host="65bd71144e">
+    <diagram id="MFhR4MGle8XZ86l0JQ9i" name="第 1 页">
+        <mxGraphModel dx="728" dy="488" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="20" value="精准测试任务状态流转" style="swimlane;" vertex="1" parent="1">
+                    <mxGeometry x="230" y="130" width="580" height="450" as="geometry"/>
+                </mxCell>
+                <mxCell id="26" style="edgeStyle=none;html=1;" edge="1" parent="20" source="21" target="25">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="21" value="开始" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="20">
+                    <mxGeometry x="30" y="70" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="28" value="" style="edgeStyle=none;html=1;" edge="1" parent="20" source="25" target="27">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="25" value="测试中" style="whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="20">
+                    <mxGeometry x="30" y="190" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="30" value="" style="edgeStyle=none;html=1;" edge="1" parent="20" source="27" target="29">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="27" value="结束测试" style="whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="20">
+                    <mxGeometry x="230" y="190" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="32" value="" style="edgeStyle=none;html=1;" edge="1" parent="20" source="29" target="31">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="29" value="测试报告生成&lt;br&gt;中" style="whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="20">
+                    <mxGeometry x="430" y="190" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="35" value="" style="edgeStyle=none;html=1;" edge="1" parent="20" source="31" target="34">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="31" value="已上传OBS" style="whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="20">
+                    <mxGeometry x="430" y="330" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="34" value="已完成" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="20">
+                    <mxGeometry x="230" y="330" width="120" height="60" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
