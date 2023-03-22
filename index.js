@@ -2,6 +2,7 @@
 
 const express = require("express");
 const cors = require('cors');
+const morgan = require('morgan')
 
 
 const RedisUtils = require("./utils/redis");
@@ -9,9 +10,17 @@ const useRouter = require("./router");
 
 const server = express();
 
+
 const PORT = 5000;
 
-
+morgan.token('body', (req) => {
+  return JSON.stringify(req.body, null, 2)
+})
+server.use(morgan(`:url  :method :status  - :response-time ms  :date[iso] 
+  ============= body =============
+  :body
+  ================================
+`))
 server.use(cors())
 server.use(express.json())
 server.use(express.urlencoded({ extended: false }))
