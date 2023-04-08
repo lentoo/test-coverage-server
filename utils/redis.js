@@ -3,24 +3,27 @@ let redisClient = null;
 const context = {
   redisClient: null,
 };
+const REDIS_HOST = process.env.REDIS_HOST;
+const REDIS_PASSWORD = process.env.REDIS_PASSWORD;
+const REDIS_DATABASE = process.env.REDIS_DATABASE;
 
 function createClient() {
   redisClient = redis.createClient({
     socket: {
-      host: "192.168.13.176",
+      host: REDIS_HOST,
     },
-    password: "Ur$pwd%321",
-    database: 0,
+    password: REDIS_PASSWORD,
+    database: REDIS_DATABASE,
   });
   // 监听错误信息
-  redisClient.on("error", (err) => {
-    console.error("redis error . ", err); // 打印监听到的错误信息
+  redisClient.on('error', (err) => {
+    console.error('redis error . ', err); // 打印监听到的错误信息
   });
 
   return redisClient;
 }
 
-Object.defineProperty(context, "redisClient", {
+Object.defineProperty(context, 'redisClient', {
   get() {
     if (redisClient) {
       return redisClient;
@@ -29,11 +32,11 @@ Object.defineProperty(context, "redisClient", {
     return redisClient;
   },
 });
-const PRE_KEY = "test-coverage-server/"
+const PRE_KEY = 'test-coverage-server/';
 // const
 module.exports = {
   async connectRedis() {
-    console.log(`connecting redis server`);
+    console.log(`connecting redis server: `, REDIS_HOST);
     await context.redisClient.connect();
   },
 
@@ -41,9 +44,9 @@ module.exports = {
     return context.redisClient.get(PRE_KEY + key);
   },
   async setValue(key, value) {
-    let valueStr = value
+    let valueStr = value;
     if (typeof valueStr !== 'string') {
-      valueStr = JSON.stringify(value)
+      valueStr = JSON.stringify(value);
     }
     return context.redisClient.set(PRE_KEY + key, valueStr);
   },
