@@ -1,4 +1,4 @@
-FROM bytest-harbor.ur.com.cn/base-image/node:14-slim AS builder
+FROM bytest-harbor.ur.com.cn/base-image/node:14.19.1
 RUN mkdir -p /app
 WORKDIR /app
 COPY package.json .
