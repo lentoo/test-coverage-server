@@ -87,7 +87,7 @@ pipeline {
         HARBOR_HOST = 'bytest-harbor.ur.com.cn'
         HARBOR_NAMESPACE = 'ur-test'
         HARBOR_CREDENTIAL_ID = 'pipeline-user-harbor'
-        BUILD_ENV = 'dev'
+        BUILD_ENV = 'test'
       }
       steps {
         container('nodejs') {
