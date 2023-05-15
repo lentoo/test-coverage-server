@@ -41,7 +41,6 @@ pipeline {
         submoduleCfg: [],
         userRemoteConfigs: scm.userRemoteConfigs])
         script {
-          sh 'wget http://192.168.13.78/paas-pub/pipeline/-/raw/master/docker/vue/Dockerfile'
           sh 'wget http://192.168.13.78/paas-pub/pipeline/-/raw/master/script/notify-qywx.py'
         }
       }
@@ -58,13 +57,11 @@ pipeline {
         HARBOR_HOST = 'bytest-harbor.ur.com.cn'
         HARBOR_NAMESPACE = 'ur-dev'
         HARBOR_CREDENTIAL_ID = 'pipeline-user-harbor'
+        BUILD_ENV = dev
+         
       }
       steps {
         container('nodejs') {
-          sh 'pnpm -v'
-          sh 'pnpm config set registry http://registry.npm.taobao.org'
-          sh 'pnpm install'
-          sh 'pnpm build:dev'
           sh 'docker build -f `pwd`/Dockerfile -t $HARBOR_HOST/$HARBOR_NAMESPACE/$APP_NAME:$BRANCH_NAME.$TAG_NAME.$BUILD_NUMBER .'
           withCredentials([usernamePassword(credentialsId : "$HARBOR_CREDENTIAL_ID" ,passwordVariable : 'HARBOR_PASSWORD' ,usernameVariable : 'HARBOR_USERNAME' ,)]) {
             sh 'echo "$HARBOR_PASSWORD" | docker login $HARBOR_HOST -u "$HARBOR_USERNAME" --password-stdin'
@@ -215,7 +212,7 @@ pipeline {
       steps {
         container ('nodejs') {
           withCredentials([kubeconfigFile(credentialsId: env.KUBECONFIG_CREDENTIAL_ID, variable: 'KUBECONFIG')]) {
-            sh 'wget http://192.168.13.78/paas-pub/pipeline/-/raw/master/deploy/ur-platform/vue/dev/0.5c_512m/deployment.yaml'
+            sh 'wget http://192.168.13.78/paas-pub/pipeline/-/raw/master/deploy/ur-platform/vue/dev/0.5c-512m/deployment.yaml'
             sh 'envsubst < `pwd`/deployment.yaml | cat -'
             sh 'envsubst < `pwd`/deployment.yaml | kubectl apply -f -'
           }
