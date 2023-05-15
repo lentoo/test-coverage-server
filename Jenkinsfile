@@ -57,7 +57,7 @@ pipeline {
         HARBOR_HOST = 'bytest-harbor.ur.com.cn'
         HARBOR_NAMESPACE = 'ur-dev'
         HARBOR_CREDENTIAL_ID = 'pipeline-user-harbor'
-        BUILD_ENV = dev
+        BUILD_ENV = 'dev'
          
       }
       steps {
@@ -87,12 +87,10 @@ pipeline {
         HARBOR_HOST = 'bytest-harbor.ur.com.cn'
         HARBOR_NAMESPACE = 'ur-test'
         HARBOR_CREDENTIAL_ID = 'pipeline-user-harbor'
+        BUILD_ENV = 'dev'
       }
       steps {
         container('nodejs') {
-          sh 'pnpm -v'
-          sh 'pnpm install'
-          sh 'pnpm build:test'
           sh 'docker build -f `pwd`/Dockerfile -t $HARBOR_HOST/$HARBOR_NAMESPACE/$APP_NAME:$BRANCH_NAME.$TAG_NAME.$BUILD_NUMBER .'
           withCredentials([usernamePassword(credentialsId : "$HARBOR_CREDENTIAL_ID" ,passwordVariable : 'HARBOR_PASSWORD' ,usernameVariable : 'HARBOR_USERNAME' ,)]) {
             sh 'echo "$HARBOR_PASSWORD" | docker login $HARBOR_HOST -u "$HARBOR_USERNAME" --password-stdin'
