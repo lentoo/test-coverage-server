@@ -3,9 +3,9 @@ let redisClient = null;
 const context = {
   redisClient: null,
 };
-const REDIS_HOST = process.env.REDIS_HOST;
-const REDIS_PASSWORD = process.env.REDIS_PASSWORD;
-const REDIS_DATABASE = process.env.REDIS_DATABASE;
+const REDIS_HOST = '192.168.13.176'; //process.env.REDIS_HOST;
+const REDIS_PASSWORD = 'Ur$pwd%321'; //process.env.REDIS_PASSWORD;
+const REDIS_DATABASE = 0; // process.env.REDIS_DATABASE;
 
 function createClient() {
   redisClient = redis.createClient({
