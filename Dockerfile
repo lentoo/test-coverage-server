@@ -5,6 +5,6 @@ COPY package.json .
 COPY pnpm-lock.yaml .
 RUN pnpm config set registry http://registry.npm.taobao.org
 RUN pnpm install
-RUN pnpm build:$BUILD_ENV 
+RUN pnpm build:dev 
 ADD . .
-RUN pnpm run $BUILD_ENV
+RUN pnpm run dev
