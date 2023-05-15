@@ -4,6 +4,6 @@ WORKDIR /app
 COPY package.json .
 COPY pnpm-lock.yaml .
 RUN pnpm config set registry http://registry.npm.taobao.org
-RUN pnpm build:dev 
+RUN pnpm build:$BUILD_ENV 
 ADD . .
 RUN pnpm run $BUILD_ENV
