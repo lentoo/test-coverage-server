@@ -18,34 +18,25 @@ pipeline {
     HARBOR_CREDENTIAL_ID = 'pipeline-user-harbor'
     KUBECONFIG_CREDENTIAL_ID = 'pipeline-user-kubeconfig'
     APP_NAME = 'test-coverage-server'
+    CONTAINER_PORT = '8000'
     GITLAB_URL = 'http://192.168.13.78/frontend/web/test-coverage-server.git'
     GITLAB_ID = 'pipeline-user-gitlab'
     GITLAB_USERNAME = 'pipeline-user'
     WX_WORK_TOKEN = '31e79e6a-fa8a-415b-8ecd-9ba0ba92320a'
   }
 
-  stages {
-    stage ('checkout scm') {
-      steps {
-        checkout([
-        $class: 'GitSCM',
-        branches: scm.branches,
-        doGenerateSubmoduleConfigurations: false,
-        extensions: [[
-        $class: 'SubmoduleOption',
-        disableSubmodules: false,
-        parentCredentials: true,
-        recursiveSubmodules: true,
-        reference: '',
-        trackingSubmodules: false]],
-        submoduleCfg: [],
-        userRemoteConfigs: scm.userRemoteConfigs])
-        script {
-          sh 'wget http://192.168.13.78/paas-pub/pipeline/-/raw/master/docker/vue/Dockerfile'
-          sh 'wget http://192.168.13.78/paas-pub/pipeline/-/raw/master/script/notify-qywx.py'
+
+    stages {
+        stage ('checkout scm') {
+            steps {
+                checkout(scm)
+                script {
+                sh 'wget http://192.168.13.78/paas-pub/pipeline/-/raw/master/script/notify-qywx.py'
+                sh 'wget http://192.168.13.78/paas-pub/pipeline/-/raw/master/deploy/ur-platform/node/Dockerfile'
+
+                }
+            }
         }
-      }
-    }
 
     stage ('build develop') {
       when {
@@ -56,25 +47,23 @@ pipeline {
       }
       environment {
         HARBOR_HOST = 'bytest-harbor.ur.com.cn'
-        HARBOR_NAMESPACE = 'ur-dev'
+        HARBOR_NAMESPACE = 'ur-platform-test'
         HARBOR_CREDENTIAL_ID = 'pipeline-user-harbor'
+         
       }
       steps {
         container('nodejs') {
-          sh 'pnpm -v'
-          sh 'pnpm config set registry http://registry.npm.taobao.org'
           sh 'pnpm install'
-          sh 'pnpm build:dev'
-          sh 'docker build -f `pwd`/Dockerfile -t $HARBOR_HOST/$HARBOR_NAMESPACE/$APP_NAME:$BRANCH_NAME.$TAG_NAME.$BUILD_NUMBER .'
+          sh 'docker build -f `pwd`/Dockerfile -t $HARBOR_HOST/$HARBOR_NAMESPACE/$APP_NAME:$BRANCH_NAME-$BUILD_NUMBER .'
           withCredentials([usernamePassword(credentialsId : "$HARBOR_CREDENTIAL_ID" ,passwordVariable : 'HARBOR_PASSWORD' ,usernameVariable : 'HARBOR_USERNAME' ,)]) {
             sh 'echo "$HARBOR_PASSWORD" | docker login $HARBOR_HOST -u "$HARBOR_USERNAME" --password-stdin'
-            sh 'docker push  $HARBOR_HOST/$HARBOR_NAMESPACE/$APP_NAME:$BRANCH_NAME.$TAG_NAME.$BUILD_NUMBER'
+            sh 'docker push  $HARBOR_HOST/$HARBOR_NAMESPACE/$APP_NAME:$BRANCH_NAME-$BUILD_NUMBER'
           }
         }
       }
       post {
         failure {
-          sh 'python `pwd`/notify-front.py $APP_NAME $HARBOR_NAMESPACE $GITLAB_URL Dev构建失败 $WX_WORK_TOKEN'
+          sh 'python `pwd`/notify-qywx.py $APP_NAME $HARBOR_NAMESPACE $GITLAB_URL Dev构建失败 $WX_WORK_TOKEN'
         }
       }
     }
@@ -88,24 +77,25 @@ pipeline {
       }
       environment {
         HARBOR_HOST = 'bytest-harbor.ur.com.cn'
-        HARBOR_NAMESPACE = 'ur-test'
+        HARBOR_NAMESPACE = 'ur-platform-test'
         HARBOR_CREDENTIAL_ID = 'pipeline-user-harbor'
+        BUILD_ENV = 'test'
       }
       steps {
         container('nodejs') {
           sh 'pnpm -v'
           sh 'pnpm install'
           sh 'pnpm build:test'
-          sh 'docker build -f `pwd`/Dockerfile -t $HARBOR_HOST/$HARBOR_NAMESPACE/$APP_NAME:$BRANCH_NAME.$TAG_NAME.$BUILD_NUMBER .'
+          sh 'docker build -f `pwd`/Dockerfile -t $HARBOR_HOST/$HARBOR_NAMESPACE/$APP_NAME:$BRANCH_NAME-$BUILD_NUMBER .'
           withCredentials([usernamePassword(credentialsId : "$HARBOR_CREDENTIAL_ID" ,passwordVariable : 'HARBOR_PASSWORD' ,usernameVariable : 'HARBOR_USERNAME' ,)]) {
             sh 'echo "$HARBOR_PASSWORD" | docker login $HARBOR_HOST -u "$HARBOR_USERNAME" --password-stdin'
-            sh 'docker push  $HARBOR_HOST/$HARBOR_NAMESPACE/$APP_NAME:$BRANCH_NAME.$TAG_NAME.$BUILD_NUMBER'
+            sh 'docker push  $HARBOR_HOST/$HARBOR_NAMESPACE/$APP_NAME:$BRANCH_NAME-$BUILD_NUMBER'
           }
         }
       }
       post {
         failure {
-          sh 'python `pwd`/notify-front.py $APP_NAME $HARBOR_NAMESPACE $GITLAB_URL Test构建失败 $WX_WORK_TOKEN'
+          sh 'python `pwd`/notify-qywx.py $APP_NAME $HARBOR_NAMESPACE $GITLAB_URL Test构建失败 $WX_WORK_TOKEN'
         }
       }
     }
@@ -136,7 +126,7 @@ pipeline {
       }
       post {
         failure {
-          sh 'python `pwd`/notify-front.py $APP_NAME $HARBOR_NAMESPACE $GITLAB_URL Pre构建失败 $WX_WORK_TOKEN'
+          sh 'python `pwd`/notify-qywx.py $APP_NAME $HARBOR_NAMESPACE $GITLAB_URL Pre构建失败 $WX_WORK_TOKEN'
         }
       }
     }
@@ -164,7 +154,7 @@ pipeline {
       }
       post {
         failure {
-          sh 'python `pwd`/notify-front.py $APP_NAME $HARBOR_NAMESPACE $GITLAB_URL Prod构建失败 $WX_WORK_TOKEN'
+          sh 'python `pwd`/notify-qywx.py $APP_NAME $HARBOR_NAMESPACE $GITLAB_URL Prod构建失败 $WX_WORK_TOKEN'
         }
       }
     }
@@ -179,12 +169,12 @@ pipeline {
       environment {
         NAMESPACE =  'ur-dev'
         HARBOR_HOST = 'bytest-harbor.ur.com.cn'
-        HARBOR_NAMESPACE = 'ur-dev'
+        HARBOR_NAMESPACE = 'ur-platform-test'
       }
       steps {
         container ('nodejs') {
           withCredentials([kubeconfigFile(credentialsId: env.KUBECONFIG_CREDENTIAL_ID, variable: 'KUBECONFIG')]) {
-            sh 'wget http://192.168.13.78/paas-pub/pipeline/-/raw/master/deploy/ur-platform/vue/dev/0.5c_512m/deployment.yaml'
+            sh 'wget https://git.ur.com.cn/paas-pub/pipeline/-/raw/master/deploy/ur-platform/node/dev/1c_2g/deployment.yaml'
             sh 'envsubst < `pwd`/deployment.yaml | cat -'
             sh 'envsubst < `pwd`/deployment.yaml | kubectl apply -f -'
           }
@@ -192,10 +182,10 @@ pipeline {
       }
       post {
         always {
-          sh 'python `pwd`/notify-front.py $APP_NAME $HARBOR_NAMESPACE $GITLAB_URL Dev镜像部署成功 $WX_WORK_TOKEN'
+          sh 'python `pwd`/notify-qywx.py $APP_NAME $HARBOR_NAMESPACE $GITLAB_URL Dev镜像部署成功 $WX_WORK_TOKEN'
         }
         failure {
-          sh 'python `pwd`/notify-front.py $APP_NAME $HARBOR_NAMESPACE $GITLAB_URL Dev镜像部署失败 $WX_WORK_TOKEN'
+          sh 'python `pwd`/notify-qywx.py $APP_NAME $HARBOR_NAMESPACE $GITLAB_URL Dev镜像部署失败 $WX_WORK_TOKEN'
         }
       }
     }
@@ -210,12 +200,12 @@ pipeline {
       environment {
         NAMESPACE =  'ur-test'
         HARBOR_HOST = 'bytest-harbor.ur.com.cn'
-        HARBOR_NAMESPACE = 'ur-test'
+        HARBOR_NAMESPACE = 'ur-platform-test'
       }
       steps {
         container ('nodejs') {
           withCredentials([kubeconfigFile(credentialsId: env.KUBECONFIG_CREDENTIAL_ID, variable: 'KUBECONFIG')]) {
-            sh 'wget http://192.168.13.78/paas-pub/pipeline/-/raw/master/deploy/ur-platform/vue/dev/0.5c_512m/deployment.yaml'
+            sh 'wget https://git.ur.com.cn/paas-pub/pipeline/-/raw/master/deploy/ur-platform/node/dev/1c_2g/deployment.yaml'
             sh 'envsubst < `pwd`/deployment.yaml | cat -'
             sh 'envsubst < `pwd`/deployment.yaml | kubectl apply -f -'
           }
@@ -223,10 +213,10 @@ pipeline {
       }
       post {
         always {
-          sh 'python `pwd`/notify-front.py $APP_NAME $HARBOR_NAMESPACE $GITLAB_URL Test镜像部署成功 $WX_WORK_TOKEN'
+          sh 'python `pwd`/notify-qywx.py $APP_NAME $HARBOR_NAMESPACE $GITLAB_URL Test镜像部署成功 $WX_WORK_TOKEN'
         }
         failure {
-          sh 'python `pwd`/notify-front.py $APP_NAME $HARBOR_NAMESPACE $GITLAB_URL Test镜像部署失败 $WX_WORK_TOKEN'
+          sh 'python `pwd`/notify-qywx.py $APP_NAME $HARBOR_NAMESPACE $GITLAB_URL Test镜像部署失败 $WX_WORK_TOKEN'
         }
       }
     }
@@ -241,12 +231,12 @@ pipeline {
       environment {
         NAMESPACE =  'ur-pre'
         HARBOR_HOST = 'hw-harbor.ur.com.cn'
-        HARBOR_NAMESPACE = 'ur-pre'
+        HARBOR_NAMESPACE = 'ur-platform-pre'
       }
       steps {
         container ('nodejs') {
           withCredentials([kubeconfigFile(credentialsId: env.KUBECONFIG_CREDENTIAL_ID, variable: 'KUBECONFIG')]) {
-            sh 'wget http://192.168.13.78/paas-pub/pipeline/-/raw/master/deploy/ur-platform/vue/pre/0.5c_1g/deployment.yaml'
+            sh 'wget https://git.ur.com.cn/paas-pub/pipeline/-/raw/master/deploy/ur-platform/node/pre/1c_2g/deployment.yaml'
             sh 'envsubst < `pwd`/deployment.yaml | cat -'
             sh 'envsubst < `pwd`/deployment.yaml | kubectl apply -f -'
           }
@@ -254,10 +244,10 @@ pipeline {
       }
       post {
         always {
-          sh 'python `pwd`/notify-front.py $APP_NAME $HARBOR_NAMESPACE $GITLAB_URL Pre镜像部署成功 $WX_WORK_TOKEN'
+          sh 'python `pwd`/notify-qywx.py $APP_NAME $HARBOR_NAMESPACE $GITLAB_URL Pre镜像部署成功 $WX_WORK_TOKEN'
         }
         failure {
-          sh 'python `pwd`/notify-front.py $APP_NAME $HARBOR_NAMESPACE $GITLAB_URL Pre镜像部署失败 $WX_WORK_TOKEN'
+          sh 'python `pwd`/notify-qywx.py $APP_NAME $HARBOR_NAMESPACE $GITLAB_URL Pre镜像部署失败 $WX_WORK_TOKEN'
         }
       }
     }
@@ -269,12 +259,12 @@ pipeline {
       environment {
         NAMESPACE =  'ur-prod'
         HARBOR_HOST = 'hw-harbor.ur.com.cn'
-        HARBOR_NAMESPACE = 'ur-prod'
+        HARBOR_NAMESPACE = 'ur-platform-prod'
       }
       steps {
         container ('nodejs') {
           withCredentials([kubeconfigFile(credentialsId: env.KUBECONFIG_CREDENTIAL_ID, variable: 'KUBECONFIG')]) {
-            sh 'wget http://192.168.13.78/paas-pub/pipeline/-/raw/master/deploy/ur-platform/vue/prod/0.5c_1g/deployment.yaml'
+            sh 'wget https://git.ur.com.cn/paas-pub/pipeline/-/raw/master/deploy/ur-platform/node/prod/1c_2g/deployment.yaml'
             sh 'envsubst < `pwd`/deployment.yaml | cat -'
             sh 'envsubst < `pwd`/deployment.yaml | kubectl apply -f -'
           }
@@ -282,10 +272,10 @@ pipeline {
       }
       post {
         always {
-          sh 'python `pwd`/notify-front.py $APP_NAME $HARBOR_NAMESPACE $GITLAB_URL Prod镜像部署成功 $WX_WORK_TOKEN'
+          sh 'python `pwd`/notify-qywx.py $APP_NAME $HARBOR_NAMESPACE $GITLAB_URL Prod镜像部署成功 $WX_WORK_TOKEN'
         }
         failure {
-          sh 'python `pwd`/notify-front.py $APP_NAME $HARBOR_NAMESPACE $GITLAB_URL Prod镜像部署失败 $WX_WORK_TOKEN'
+          sh 'python `pwd`/notify-qywx.py $APP_NAME $HARBOR_NAMESPACE $GITLAB_URL Prod镜像部署失败 $WX_WORK_TOKEN'
         }
       }
     }
