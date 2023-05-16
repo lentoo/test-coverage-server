@@ -63,7 +63,7 @@ pipeline {
       }
       post {
         failure {
-          sh 'python `pwd`/notify-front.py $APP_NAME $HARBOR_NAMESPACE $GITLAB_URL Dev构建失败 $WX_WORK_TOKEN'
+          sh 'python `pwd`/notify-qywx.py $APP_NAME $HARBOR_NAMESPACE $GITLAB_URL Dev构建失败 $WX_WORK_TOKEN'
         }
       }
     }
@@ -95,7 +95,7 @@ pipeline {
       }
       post {
         failure {
-          sh 'python `pwd`/notify-front.py $APP_NAME $HARBOR_NAMESPACE $GITLAB_URL Test构建失败 $WX_WORK_TOKEN'
+          sh 'python `pwd`/notify-qywx.py $APP_NAME $HARBOR_NAMESPACE $GITLAB_URL Test构建失败 $WX_WORK_TOKEN'
         }
       }
     }
@@ -126,7 +126,7 @@ pipeline {
       }
       post {
         failure {
-          sh 'python `pwd`/notify-front.py $APP_NAME $HARBOR_NAMESPACE $GITLAB_URL Pre构建失败 $WX_WORK_TOKEN'
+          sh 'python `pwd`/notify-qywx.py $APP_NAME $HARBOR_NAMESPACE $GITLAB_URL Pre构建失败 $WX_WORK_TOKEN'
         }
       }
     }
@@ -154,7 +154,7 @@ pipeline {
       }
       post {
         failure {
-          sh 'python `pwd`/notify-front.py $APP_NAME $HARBOR_NAMESPACE $GITLAB_URL Prod构建失败 $WX_WORK_TOKEN'
+          sh 'python `pwd`/notify-qywx.py $APP_NAME $HARBOR_NAMESPACE $GITLAB_URL Prod构建失败 $WX_WORK_TOKEN'
         }
       }
     }
@@ -182,10 +182,10 @@ pipeline {
       }
       post {
         always {
-          sh 'python `pwd`/notify-front.py $APP_NAME $HARBOR_NAMESPACE $GITLAB_URL Dev镜像部署成功 $WX_WORK_TOKEN'
+          sh 'python `pwd`/notify-qywx.py $APP_NAME $HARBOR_NAMESPACE $GITLAB_URL Dev镜像部署成功 $WX_WORK_TOKEN'
         }
         failure {
-          sh 'python `pwd`/notify-front.py $APP_NAME $HARBOR_NAMESPACE $GITLAB_URL Dev镜像部署失败 $WX_WORK_TOKEN'
+          sh 'python `pwd`/notify-qywx.py $APP_NAME $HARBOR_NAMESPACE $GITLAB_URL Dev镜像部署失败 $WX_WORK_TOKEN'
         }
       }
     }
@@ -213,10 +213,10 @@ pipeline {
       }
       post {
         always {
-          sh 'python `pwd`/notify-front.py $APP_NAME $HARBOR_NAMESPACE $GITLAB_URL Test镜像部署成功 $WX_WORK_TOKEN'
+          sh 'python `pwd`/notify-qywx.py $APP_NAME $HARBOR_NAMESPACE $GITLAB_URL Test镜像部署成功 $WX_WORK_TOKEN'
         }
         failure {
-          sh 'python `pwd`/notify-front.py $APP_NAME $HARBOR_NAMESPACE $GITLAB_URL Test镜像部署失败 $WX_WORK_TOKEN'
+          sh 'python `pwd`/notify-qywx.py $APP_NAME $HARBOR_NAMESPACE $GITLAB_URL Test镜像部署失败 $WX_WORK_TOKEN'
         }
       }
     }
@@ -244,10 +244,10 @@ pipeline {
       }
       post {
         always {
-          sh 'python `pwd`/notify-front.py $APP_NAME $HARBOR_NAMESPACE $GITLAB_URL Pre镜像部署成功 $WX_WORK_TOKEN'
+          sh 'python `pwd`/notify-qywx.py $APP_NAME $HARBOR_NAMESPACE $GITLAB_URL Pre镜像部署成功 $WX_WORK_TOKEN'
         }
         failure {
-          sh 'python `pwd`/notify-front.py $APP_NAME $HARBOR_NAMESPACE $GITLAB_URL Pre镜像部署失败 $WX_WORK_TOKEN'
+          sh 'python `pwd`/notify-qywx.py $APP_NAME $HARBOR_NAMESPACE $GITLAB_URL Pre镜像部署失败 $WX_WORK_TOKEN'
         }
       }
     }
@@ -272,10 +272,10 @@ pipeline {
       }
       post {
         always {
-          sh 'python `pwd`/notify-front.py $APP_NAME $HARBOR_NAMESPACE $GITLAB_URL Prod镜像部署成功 $WX_WORK_TOKEN'
+          sh 'python `pwd`/notify-qywx.py $APP_NAME $HARBOR_NAMESPACE $GITLAB_URL Prod镜像部署成功 $WX_WORK_TOKEN'
         }
         failure {
-          sh 'python `pwd`/notify-front.py $APP_NAME $HARBOR_NAMESPACE $GITLAB_URL Prod镜像部署失败 $WX_WORK_TOKEN'
+          sh 'python `pwd`/notify-qywx.py $APP_NAME $HARBOR_NAMESPACE $GITLAB_URL Prod镜像部署失败 $WX_WORK_TOKEN'
         }
       }
     }
