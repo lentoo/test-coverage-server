@@ -177,12 +177,12 @@ pipeline {
       environment {
         NAMESPACE =  'ur-dev'
         HARBOR_HOST = 'bytest-harbor.ur.com.cn'
-        HARBOR_NAMESPACE = 'ur-dev'
+        HARBOR_NAMESPACE = 'ur-platform-test'
       }
       steps {
         container ('nodejs') {
           withCredentials([kubeconfigFile(credentialsId: env.KUBECONFIG_CREDENTIAL_ID, variable: 'KUBECONFIG')]) {
-            sh 'wget http://192.168.13.78/paas-pub/pipeline/-/raw/master/deploy/ur-platform/vue/dev/0.5c_512m/deployment.yaml'
+            //sh 'wget http://192.168.13.78/paas-pub/pipeline/-/raw/master/deploy/ur-platform/vue/dev/0.5c_512m/deployment.yaml'
             sh 'envsubst < `pwd`/deployment.yaml | cat -'
             sh 'envsubst < `pwd`/deployment.yaml | kubectl apply -f -'
           }
@@ -208,12 +208,12 @@ pipeline {
       environment {
         NAMESPACE =  'ur-test'
         HARBOR_HOST = 'bytest-harbor.ur.com.cn'
-        HARBOR_NAMESPACE = 'ur-test'
+        HARBOR_NAMESPACE = 'ur-platform-test'
       }
       steps {
         container ('nodejs') {
           withCredentials([kubeconfigFile(credentialsId: env.KUBECONFIG_CREDENTIAL_ID, variable: 'KUBECONFIG')]) {
-            sh 'wget http://192.168.13.78/paas-pub/pipeline/-/raw/master/deploy/ur-platform/vue/dev/0.5c-512m/deployment.yaml'
+            //sh 'wget http://192.168.13.78/paas-pub/pipeline/-/raw/master/deploy/ur-platform/vue/dev/0.5c-512m/deployment.yaml'
             sh 'envsubst < `pwd`/deployment.yaml | cat -'
             sh 'envsubst < `pwd`/deployment.yaml | kubectl apply -f -'
           }
@@ -239,12 +239,12 @@ pipeline {
       environment {
         NAMESPACE =  'ur-pre'
         HARBOR_HOST = 'hw-harbor.ur.com.cn'
-        HARBOR_NAMESPACE = 'ur-pre'
+        HARBOR_NAMESPACE = 'ur-platform-pre'
       }
       steps {
         container ('nodejs') {
           withCredentials([kubeconfigFile(credentialsId: env.KUBECONFIG_CREDENTIAL_ID, variable: 'KUBECONFIG')]) {
-            sh 'wget http://192.168.13.78/paas-pub/pipeline/-/raw/master/deploy/ur-platform/vue/pre/0.5c_1g/deployment.yaml'
+            //sh 'wget http://192.168.13.78/paas-pub/pipeline/-/raw/master/deploy/ur-platform/vue/pre/0.5c_1g/deployment.yaml'
             sh 'envsubst < `pwd`/deployment.yaml | cat -'
             sh 'envsubst < `pwd`/deployment.yaml | kubectl apply -f -'
           }
@@ -267,12 +267,12 @@ pipeline {
       environment {
         NAMESPACE =  'ur-prod'
         HARBOR_HOST = 'hw-harbor.ur.com.cn'
-        HARBOR_NAMESPACE = 'ur-prod'
+        HARBOR_NAMESPACE = 'ur-platform-prod'
       }
       steps {
         container ('nodejs') {
           withCredentials([kubeconfigFile(credentialsId: env.KUBECONFIG_CREDENTIAL_ID, variable: 'KUBECONFIG')]) {
-            sh 'wget http://192.168.13.78/paas-pub/pipeline/-/raw/master/deploy/ur-platform/vue/prod/0.5c_1g/deployment.yaml'
+            //sh 'wget http://192.168.13.78/paas-pub/pipeline/-/raw/master/deploy/ur-platform/vue/prod/0.5c_1g/deployment.yaml'
             sh 'envsubst < `pwd`/deployment.yaml | cat -'
             sh 'envsubst < `pwd`/deployment.yaml | kubectl apply -f -'
           }
