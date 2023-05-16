@@ -24,15 +24,18 @@ pipeline {
     WX_WORK_TOKEN = '31e79e6a-fa8a-415b-8ecd-9ba0ba92320a'
   }
 
-  stages {
-    stage ('checkout scm') {
-        checkout(scm)
-        script {
-          sh 'wget http://192.168.13.78/paas-pub/pipeline/-/raw/master/script/notify-qywx.py'
-          sh 'wget http://192.168.13.78/paas-pub/pipeline/-/raw/master/deploy/ur-platform/node/Dockerfile'
+
+    stages {
+        stage ('checkout scm') {
+            steps {
+                checkout(scm)
+                script {
+                sh 'wget http://192.168.13.78/paas-pub/pipeline/-/raw/master/script/notify-qywx.py'
+                sh 'wget http://192.168.13.78/paas-pub/pipeline/-/raw/master/deploy/ur-platform/node/Dockerfile'
+
+                }
+            }
         }
-      }
-    }
 
     stage ('build develop') {
       when {
