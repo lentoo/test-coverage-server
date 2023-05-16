@@ -18,6 +18,7 @@ pipeline {
     HARBOR_CREDENTIAL_ID = 'pipeline-user-harbor'
     KUBECONFIG_CREDENTIAL_ID = 'pipeline-user-kubeconfig'
     APP_NAME = 'test-coverage-server'
+    CONTAINER_PORT = '8000'
     GITLAB_URL = 'http://192.168.13.78/frontend/web/test-coverage-server.git'
     GITLAB_ID = 'pipeline-user-gitlab'
     GITLAB_USERNAME = 'pipeline-user'
