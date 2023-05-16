@@ -55,7 +55,7 @@ pipeline {
       }
       environment {
         HARBOR_HOST = 'bytest-harbor.ur.com.cn'
-        HARBOR_NAMESPACE = 'ur-dev'
+        HARBOR_NAMESPACE = 'ur-platform-test'
         HARBOR_CREDENTIAL_ID = 'pipeline-user-harbor'
          
       }
@@ -85,7 +85,7 @@ pipeline {
       }
       environment {
         HARBOR_HOST = 'bytest-harbor.ur.com.cn'
-        HARBOR_NAMESPACE = 'ur-test'
+        HARBOR_NAMESPACE = 'ur-platform-test'
         HARBOR_CREDENTIAL_ID = 'pipeline-user-harbor'
         BUILD_ENV = 'test'
       }
