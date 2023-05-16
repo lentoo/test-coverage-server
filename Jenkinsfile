@@ -26,6 +26,7 @@ pipeline {
 
   stages {
     stage ('checkout scm') {
+        checkout(scm)
         script {
           sh 'wget http://192.168.13.78/paas-pub/pipeline/-/raw/master/script/notify-qywx.py'
           sh 'wget http://192.168.13.78/paas-pub/pipeline/-/raw/master/deploy/ur-platform/node/Dockerfile'
