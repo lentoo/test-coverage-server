@@ -83,9 +83,7 @@ pipeline {
       }
       steps {
         container('nodejs') {
-          sh 'pnpm -v'
           sh 'pnpm install'
-          sh 'pnpm build:test'
           sh 'docker build -f `pwd`/Dockerfile -t $HARBOR_HOST/$HARBOR_NAMESPACE/$APP_NAME:$BRANCH_NAME-$BUILD_NUMBER .'
           withCredentials([usernamePassword(credentialsId : "$HARBOR_CREDENTIAL_ID" ,passwordVariable : 'HARBOR_PASSWORD' ,usernameVariable : 'HARBOR_USERNAME' ,)]) {
             sh 'echo "$HARBOR_PASSWORD" | docker login $HARBOR_HOST -u "$HARBOR_USERNAME" --password-stdin'
@@ -114,9 +112,7 @@ pipeline {
       }
       steps {
         container('nodejs') {
-          sh 'pnpm -v'
           sh 'pnpm install'
-          sh 'pnpm build:pre'
           sh 'docker build -f `pwd`/Dockerfile -t $HARBOR_HOST/$HARBOR_NAMESPACE/$APP_NAME:$BRANCH_NAME-$BUILD_NUMBER .'
           withCredentials([usernamePassword(credentialsId : "$HARBOR_CREDENTIAL_ID" ,passwordVariable : 'HARBOR_PASSWORD' ,usernameVariable : 'HARBOR_USERNAME' ,)]) {
             sh 'echo "$HARBOR_PASSWORD" | docker login $HARBOR_HOST -u "$HARBOR_USERNAME" --password-stdin'
@@ -142,9 +138,7 @@ pipeline {
       }
       steps {
         container('nodejs') {
-          sh 'pnpm -v'
           sh 'pnpm install'
-          sh 'pnpm build'
           sh 'docker build -f `pwd`/Dockerfile -t $HARBOR_HOST/$HARBOR_NAMESPACE/$APP_NAME:$BRANCH_NAME-$BUILD_NUMBER .'
           withCredentials([usernamePassword(credentialsId : "$HARBOR_CREDENTIAL_ID" ,passwordVariable : 'HARBOR_PASSWORD' ,usernameVariable : 'HARBOR_USERNAME' ,)]) {
             sh 'echo "$HARBOR_PASSWORD" | docker login $HARBOR_HOST -u "$HARBOR_USERNAME" --password-stdin'
