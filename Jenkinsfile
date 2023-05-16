@@ -26,22 +26,9 @@ pipeline {
 
   stages {
     stage ('checkout scm') {
-      steps {
-        checkout([
-        $class: 'GitSCM',
-        branches: scm.branches,
-        doGenerateSubmoduleConfigurations: false,
-        extensions: [[
-        $class: 'SubmoduleOption',
-        disableSubmodules: false,
-        parentCredentials: true,
-        recursiveSubmodules: true,
-        reference: '',
-        trackingSubmodules: false]],
-        submoduleCfg: [],
-        userRemoteConfigs: scm.userRemoteConfigs])
         script {
           sh 'wget http://192.168.13.78/paas-pub/pipeline/-/raw/master/script/notify-qywx.py'
+          sh 'wget http://192.168.13.78/paas-pub/pipeline/-/raw/master/deploy/ur-platform/node/Dockerfile'
         }
       }
     }
@@ -182,7 +169,7 @@ pipeline {
       steps {
         container ('nodejs') {
           withCredentials([kubeconfigFile(credentialsId: env.KUBECONFIG_CREDENTIAL_ID, variable: 'KUBECONFIG')]) {
-            //sh 'wget http://192.168.13.78/paas-pub/pipeline/-/raw/master/deploy/ur-platform/vue/dev/0.5c_512m/deployment.yaml'
+            sh 'wget https://git.ur.com.cn/paas-pub/pipeline/-/raw/master/deploy/ur-platform/node/dev/1c_2g/deployment.yaml'
             sh 'envsubst < `pwd`/deployment.yaml | cat -'
             sh 'envsubst < `pwd`/deployment.yaml | kubectl apply -f -'
           }
@@ -213,7 +200,7 @@ pipeline {
       steps {
         container ('nodejs') {
           withCredentials([kubeconfigFile(credentialsId: env.KUBECONFIG_CREDENTIAL_ID, variable: 'KUBECONFIG')]) {
-            //sh 'wget http://192.168.13.78/paas-pub/pipeline/-/raw/master/deploy/ur-platform/vue/dev/0.5c-512m/deployment.yaml'
+            sh 'wget https://git.ur.com.cn/paas-pub/pipeline/-/raw/master/deploy/ur-platform/node/dev/1c_2g/deployment.yaml'
             sh 'envsubst < `pwd`/deployment.yaml | cat -'
             sh 'envsubst < `pwd`/deployment.yaml | kubectl apply -f -'
           }
@@ -244,7 +231,7 @@ pipeline {
       steps {
         container ('nodejs') {
           withCredentials([kubeconfigFile(credentialsId: env.KUBECONFIG_CREDENTIAL_ID, variable: 'KUBECONFIG')]) {
-            //sh 'wget http://192.168.13.78/paas-pub/pipeline/-/raw/master/deploy/ur-platform/vue/pre/0.5c_1g/deployment.yaml'
+            sh 'wget https://git.ur.com.cn/paas-pub/pipeline/-/raw/master/deploy/ur-platform/node/pre/1c_2g/deployment.yaml'
             sh 'envsubst < `pwd`/deployment.yaml | cat -'
             sh 'envsubst < `pwd`/deployment.yaml | kubectl apply -f -'
           }
@@ -272,7 +259,7 @@ pipeline {
       steps {
         container ('nodejs') {
           withCredentials([kubeconfigFile(credentialsId: env.KUBECONFIG_CREDENTIAL_ID, variable: 'KUBECONFIG')]) {
-            //sh 'wget http://192.168.13.78/paas-pub/pipeline/-/raw/master/deploy/ur-platform/vue/prod/0.5c_1g/deployment.yaml'
+            sh 'wget https://git.ur.com.cn/paas-pub/pipeline/-/raw/master/deploy/ur-platform/node/prod/1c_2g/deployment.yaml'
             sh 'envsubst < `pwd`/deployment.yaml | cat -'
             sh 'envsubst < `pwd`/deployment.yaml | kubectl apply -f -'
           }
