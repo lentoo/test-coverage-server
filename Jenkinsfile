@@ -53,6 +53,7 @@ pipeline {
       }
       steps {
         container('nodejs') {
+          sh 'pnpm install -g @ur-constructions/test-coverage-cli'
           sh 'pnpm install'
           sh 'docker build -f `pwd`/Dockerfile -t $HARBOR_HOST/$HARBOR_NAMESPACE/$APP_NAME:$BRANCH_NAME-$BUILD_NUMBER .'
           withCredentials([usernamePassword(credentialsId : "$HARBOR_CREDENTIAL_ID" ,passwordVariable : 'HARBOR_PASSWORD' ,usernameVariable : 'HARBOR_USERNAME' ,)]) {
@@ -83,6 +84,7 @@ pipeline {
       }
       steps {
         container('nodejs') {
+          sh 'pnpm install -g @ur-constructions/test-coverage-cli'
           sh 'pnpm install'
           sh 'docker build -f `pwd`/Dockerfile -t $HARBOR_HOST/$HARBOR_NAMESPACE/$APP_NAME:$BRANCH_NAME-$BUILD_NUMBER .'
           withCredentials([usernamePassword(credentialsId : "$HARBOR_CREDENTIAL_ID" ,passwordVariable : 'HARBOR_PASSWORD' ,usernameVariable : 'HARBOR_USERNAME' ,)]) {
@@ -112,6 +114,7 @@ pipeline {
       }
       steps {
         container('nodejs') {
+          sh 'pnpm install -g @ur-constructions/test-coverage-cli'
           sh 'pnpm install'
           sh 'docker build -f `pwd`/Dockerfile -t $HARBOR_HOST/$HARBOR_NAMESPACE/$APP_NAME:$BRANCH_NAME-$BUILD_NUMBER .'
           withCredentials([usernamePassword(credentialsId : "$HARBOR_CREDENTIAL_ID" ,passwordVariable : 'HARBOR_PASSWORD' ,usernameVariable : 'HARBOR_USERNAME' ,)]) {
@@ -138,6 +141,7 @@ pipeline {
       }
       steps {
         container('nodejs') {
+          sh 'pnpm install -g @ur-constructions/test-coverage-cli'
           sh 'pnpm install'
           sh 'docker build -f `pwd`/Dockerfile -t $HARBOR_HOST/$HARBOR_NAMESPACE/$APP_NAME:$BRANCH_NAME-$BUILD_NUMBER .'
           withCredentials([usernamePassword(credentialsId : "$HARBOR_CREDENTIAL_ID" ,passwordVariable : 'HARBOR_PASSWORD' ,usernameVariable : 'HARBOR_USERNAME' ,)]) {
