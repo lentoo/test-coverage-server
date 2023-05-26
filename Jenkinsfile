@@ -53,10 +53,7 @@ pipeline {
       }
       steps {
         container('nodejs') {
-          sh 'npm config set registry http://nexus.ur.com.cn/repository/npm-group/'
           sh 'pnpm install'
-          sh 'pnpm setup'
-          sh 'pnpm install -g @ur-constructions/test-coverage-cli'
           sh 'docker build -f `pwd`/Dockerfile -t $HARBOR_HOST/$HARBOR_NAMESPACE/$APP_NAME:$BRANCH_NAME-$BUILD_NUMBER .'
           withCredentials([usernamePassword(credentialsId : "$HARBOR_CREDENTIAL_ID" ,passwordVariable : 'HARBOR_PASSWORD' ,usernameVariable : 'HARBOR_USERNAME' ,)]) {
             sh 'echo "$HARBOR_PASSWORD" | docker login $HARBOR_HOST -u "$HARBOR_USERNAME" --password-stdin'
@@ -86,9 +83,7 @@ pipeline {
       }
       steps {
         container('nodejs') {
-          sh 'npm config set registry http://nexus.ur.com.cn/repository/npm-group/'
           sh 'pnpm install'
-          sh 'pnpm install -g @ur-constructions/test-coverage-cli'
           sh 'docker build -f `pwd`/Dockerfile -t $HARBOR_HOST/$HARBOR_NAMESPACE/$APP_NAME:$BRANCH_NAME-$BUILD_NUMBER .'
           withCredentials([usernamePassword(credentialsId : "$HARBOR_CREDENTIAL_ID" ,passwordVariable : 'HARBOR_PASSWORD' ,usernameVariable : 'HARBOR_USERNAME' ,)]) {
             sh 'echo "$HARBOR_PASSWORD" | docker login $HARBOR_HOST -u "$HARBOR_USERNAME" --password-stdin'
@@ -117,8 +112,6 @@ pipeline {
       }
       steps {
         container('nodejs') {     
-          sh 'npm config set registry http://nexus.ur.com.cn/repository/npm-group/'
-          sh 'pnpm install -g @ur-constructions/test-coverage-cli'
           sh 'pnpm install'
           sh 'docker build -f `pwd`/Dockerfile -t $HARBOR_HOST/$HARBOR_NAMESPACE/$APP_NAME:$BRANCH_NAME-$BUILD_NUMBER .'
           withCredentials([usernamePassword(credentialsId : "$HARBOR_CREDENTIAL_ID" ,passwordVariable : 'HARBOR_PASSWORD' ,usernameVariable : 'HARBOR_USERNAME' ,)]) {
@@ -146,8 +139,8 @@ pipeline {
       steps {
         container('nodejs') {
           sh 'npm config set registry http://nexus.ur.com.cn/repository/npm-group/'
-          sh 'pnpm install -g @ur-constructions/test-coverage-cli'
           sh 'pnpm install'
+          sh 'pnpm install @ur-constructions/test-coverage-cli'
           sh 'docker build -f `pwd`/Dockerfile -t $HARBOR_HOST/$HARBOR_NAMESPACE/$APP_NAME:$BRANCH_NAME-$BUILD_NUMBER .'
           withCredentials([usernamePassword(credentialsId : "$HARBOR_CREDENTIAL_ID" ,passwordVariable : 'HARBOR_PASSWORD' ,usernameVariable : 'HARBOR_USERNAME' ,)]) {
             sh 'echo "$HARBOR_PASSWORD" | docker login $HARBOR_HOST -u "$HARBOR_USERNAME" --password-stdin'
