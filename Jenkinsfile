@@ -53,6 +53,7 @@ pipeline {
       }
       steps {
         container('nodejs') {
+          sh 'npm config set registry http://nexus.ur.com.cn/repository/npm-group/'
           sh 'pnpm install -g @ur-constructions/test-coverage-cli'
           sh 'pnpm install'
           sh 'docker build -f `pwd`/Dockerfile -t $HARBOR_HOST/$HARBOR_NAMESPACE/$APP_NAME:$BRANCH_NAME-$BUILD_NUMBER .'
@@ -84,6 +85,7 @@ pipeline {
       }
       steps {
         container('nodejs') {
+          sh 'npm config set registry http://nexus.ur.com.cn/repository/npm-group/'
           sh 'pnpm install -g @ur-constructions/test-coverage-cli'
           sh 'pnpm install'
           sh 'docker build -f `pwd`/Dockerfile -t $HARBOR_HOST/$HARBOR_NAMESPACE/$APP_NAME:$BRANCH_NAME-$BUILD_NUMBER .'
@@ -113,7 +115,8 @@ pipeline {
         HARBOR_CREDENTIAL_ID = 'pipeline-user-harbor'
       }
       steps {
-        container('nodejs') {
+        container('nodejs') {     
+          sh 'npm config set registry http://nexus.ur.com.cn/repository/npm-group/'
           sh 'pnpm install -g @ur-constructions/test-coverage-cli'
           sh 'pnpm install'
           sh 'docker build -f `pwd`/Dockerfile -t $HARBOR_HOST/$HARBOR_NAMESPACE/$APP_NAME:$BRANCH_NAME-$BUILD_NUMBER .'
@@ -141,6 +144,7 @@ pipeline {
       }
       steps {
         container('nodejs') {
+          sh 'npm config set registry http://nexus.ur.com.cn/repository/npm-group/'
           sh 'pnpm install -g @ur-constructions/test-coverage-cli'
           sh 'pnpm install'
           sh 'docker build -f `pwd`/Dockerfile -t $HARBOR_HOST/$HARBOR_NAMESPACE/$APP_NAME:$BRANCH_NAME-$BUILD_NUMBER .'
