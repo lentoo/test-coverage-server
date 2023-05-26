@@ -1,6 +1,6 @@
 {
   "name": "test-coverage-server",
-  "version": "1.0.0",
+  "version": "1.0.1-beta.1",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -22,6 +22,7 @@
     "redis": "^4.6.5"
   },
   "devDependencies": {
+    "@ur-constructions/test-coverage-cli": "^1.0.1-beta.0",
     "cross-env": "^7.0.3"
   }
 }
