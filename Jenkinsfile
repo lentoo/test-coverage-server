@@ -85,8 +85,8 @@ pipeline {
       }
       steps {
         container('nodejs') {
-          sh 'npm config set registry http://nexus.ur.com.cn/repository/npm-host/'
-          sh 'npm install -g @ur-constructions/test-coverage-cli@1.0.0'
+          // sh 'npm config set registry http://nexus.ur.com.cn/repository/npm-host/'
+          // sh 'npm install -g @ur-constructions/test-coverage-cli@1.0.0'
           sh 'pnpm install'
           sh 'docker build -f `pwd`/Dockerfile -t $HARBOR_HOST/$HARBOR_NAMESPACE/$APP_NAME:$BRANCH_NAME-$BUILD_NUMBER .'
           withCredentials([usernamePassword(credentialsId : "$HARBOR_CREDENTIAL_ID" ,passwordVariable : 'HARBOR_PASSWORD' ,usernameVariable : 'HARBOR_USERNAME' ,)]) {
