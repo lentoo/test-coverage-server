@@ -33,7 +33,7 @@ async function execReport(taskJson) {
   // const currentTest = taskJson
   const filepath = path.resolve(
     process.cwd(),
-    `./files/${taskJson.project}/${taskJsnon.branch}/${taskJson.commitHash}/${taskJson.start}.json`
+    `./files/${taskJson.project}/${taskJson.branch}/${taskJson.commitHash}/${taskJson.start}.json`
   );
   const fileDirectory = path.dirname(filepath);
   // const fileDirectory = `${currentTest.project}/${currentTest.branch}/${currentTest.commitHash}`;
@@ -78,9 +78,10 @@ module.exports = function useRouter(server) {
       res.send({
         data: '参数异常',
         code: 200,
-        success: true,
+        success: false,
       });
       res.end();
+      return
     }
 
     await RedisUtils.setValue(`task.${req.body.taskId}`, {
