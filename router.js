@@ -71,7 +71,17 @@ module.exports = function useRouter(server) {
         taskId: '13324', // 平台提供id
       }
    */
+
     const body = req.body;
+
+    if (!req.body.taskId) {
+      res.send({
+        data: '参数异常',
+        code: 200,
+        success: true,
+      });
+      res.end();
+    }
 
     await RedisUtils.setValue(`task.${req.body.taskId}`, {
       ...body,
