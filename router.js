@@ -38,8 +38,9 @@ async function execReport(taskJson) {
   const fileDirectory = path.dirname(filepath);
   // const fileDirectory = `${currentTest.project}/${currentTest.branch}/${currentTest.commitHash}`;
   await makeDir(`${fileDirectory}/report`);
+  // cli-test report ./out --reporter=html --project-id=575 --ref=test --private-token=e3wTHCndxrV2vcvXx-Px
   return useExec(
-    `npx cli-test report ${fileDirectory} ${fileDirectory}/report`
+    `npx cli-test report ${fileDirectory} ${fileDirectory}/report --reporter=html --project-id=575 --ref=test --private-token=e3wTHCndxrV2vcvXx-Px`
   ).then((res) => {
     console.log('report 导出完成');
   });
@@ -81,7 +82,7 @@ module.exports = function useRouter(server) {
         success: false,
       });
       res.end();
-      return
+      return;
     }
 
     await RedisUtils.setValue(`task.${req.body.taskId}`, {
@@ -165,9 +166,11 @@ module.exports = function useRouter(server) {
 
     await execMerge(taskJson);
     await execReport(taskJson);
+    taskJson.status = 'DONE'; // 报告生成完成
+    await RedisUtils.setValue(`task.${req.body.taskId}`, taskJson);
     res.send({
       message: 'success',
-      data: req.body.taskId,
+      data: 'taskId:' + req.body.taskId,
       code: 200,
       success: true,
     });
