@@ -1,7 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@ur-constructions/test-coverage-cli': 1.0.3-beta.1
+  '@ur-constructions/test-coverage-cli': 1.0.3-beta.3
   cors: ^2.8.5
   cross-env: ^7.0.3
   express: ^4.18.2
@@ -19,7 +19,7 @@ dependencies:
   redis: registry.npmmirror.com/redis/4.6.5
 
 devDependencies:
-  '@ur-constructions/test-coverage-cli': 1.0.3-beta.1
+  '@ur-constructions/test-coverage-cli': 1.0.3-beta.3
   cross-env: registry.npmmirror.com/cross-env/7.0.3
 
 packages:
@@ -401,8 +401,8 @@ packages:
       - supports-color
     dev: false
 
-  /@ur-constructions/test-coverage-cli/1.0.3-beta.1:
-    resolution: {integrity: sha512-0mqLl5fvDXWk2ZU1aELl7n0tNbuJm9CwAkHQO42BxnDtzG8QSQZ4ZgMBVBbCDDkmPcXH3uL+KuNM0lPTu3DuyA==}
+  /@ur-constructions/test-coverage-cli/1.0.3-beta.3:
+    resolution: {integrity: sha512-gRjNgNNLcWYUhzMBcU9a7XPWNHnEQVIL591ZnipmRSqqnJh7eumwZX5/4H0MpE/R8ggq7jNni9zXo8li76rq7Q==}
     hasBin: true
     dependencies:
       '@babel/core': 7.21.8
@@ -421,7 +421,7 @@ packages:
       istanbul-lib-report: 3.0.0
       istanbul-lib-source-maps: 4.0.1
       istanbul-reports: 3.1.5
-      istanbul-reports-async: 3.1.6-beta.0
+      istanbul-reports-async: 3.1.6
       make-dir: 3.1.0
       p-map: 4.0.0
       typescript: 4.9.5
@@ -955,8 +955,8 @@ packages:
       - supports-color
     dev: true
 
-  /istanbul-reports-async/3.1.6-beta.0:
-    resolution: {integrity: sha512-TwN09JuXaV5DfxsQDW5z8EEt9LEfbXjhMnoJsnnAtzb5c0GYogOSIfH8PYb8FtffkXyqfYnpjhvxgm0kyFHY1w==}
+  /istanbul-reports-async/3.1.6:
+    resolution: {integrity: sha512-H1dca3APRzpVzaGqdYS+c+KQtjDXdWmPnHmbXp9zBlSgnQSV3iSeF6GIHuf0mGkA6b7Oj72GuIHT7SwjpuiP5w==}
     engines: {node: '>=8'}
     dependencies:
       html-escaper: 2.0.2
