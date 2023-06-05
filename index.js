@@ -32,7 +32,7 @@ server.use(express.urlencoded({ extended: false }));
  */
 server.use(
   '/web-converage/reports',
-  express.static(path.join(__dirname, 'files'))
+  express.static(path.join(__dirname, './files'))
 );
 server.listen(PORT, () => {
   console.log(`listening on port ${PORT}`);
