@@ -108,7 +108,29 @@ module.exports = function useRouter(server) {
       return;
     }
 
-    await RedisUtils.setValue(getTaskKey(req.body.taskId), {
+    const taskKey = getTaskKey(req.body.taskId)
+    const result = await RedisUtils.getKey(taskKey)
+    if (result) {
+      if (result.status === 'DONE') {
+        res.send({
+          message: `当前task id 已完成`,
+          code: 200,
+          success: false,
+        })
+        res.send()
+        return
+      }
+      res.send({
+        message: `当前task id 已存在`,
+        code: 200,
+        success: false,
+      })
+      res.send()
+      return
+    }
+
+
+    await RedisUtils.setValue(, {
       ...body,
       status: 'START',
     });
@@ -143,7 +165,7 @@ module.exports = function useRouter(server) {
       return;
     }
 
-    taskJson = JSON.parse(taskJson);
+    // taskJson = JSON.parse(taskJson);
     if (![STATUS.START, STATUS.TESTING].includes(taskJson.status)) {
       res.send({
         message: `taskId ${req.body.taskId} 任务状态 ${taskJson.status} 不可上报`,
@@ -181,7 +203,8 @@ module.exports = function useRouter(server) {
   // 3. 结束测试
 
   server.post('/end-collect', async (req, res) => {
-    let taskJson = await RedisUtils.getKey('task.' + req.body.taskId);
+    const taskKey = getTaskKey(req.body.taskId)
+    let taskJson = await RedisUtils.getKey(taskKey);
     if (!taskJson) {
       res.send({
         message: `taskId ${req.body.taskId} 不存在`,
@@ -191,17 +214,17 @@ module.exports = function useRouter(server) {
       res.end();
       return;
     }
-    taskJson = JSON.parse(taskJson);
+    // taskJson = JSON.parse(taskJson);
 
     // taskJson.status ='END' // 測試中
     // await RedisUtils.setValue(`task.${req.body.taskId}`, taskJson)
     taskJson.status = STATUS.REPORTER_GENERATION; // 报告生成中
-    await RedisUtils.setValue(`task.${req.body.taskId}`, taskJson);
+    await RedisUtils.setValue(taskKey, taskJson);
 
     await execMerge(taskJson);
     await execReport(taskJson);
     taskJson.status = STATUS.DONE; // 报告生成完成
-    await RedisUtils.setValue(`task.${req.body.taskId}`, taskJson);
+    await RedisUtils.setValue(taskKey, taskJson);
     res.send({
       message: 'success',
       data: 'taskId:' + req.body.taskId,

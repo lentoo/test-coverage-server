@@ -41,7 +41,12 @@ module.exports = {
   },
 
   async getKey(key) {
-    return context.redisClient.get(PRE_KEY + key);
+    const result = context.redisClient.get(PRE_KEY + key);
+    if (result) {
+      return JSON.parse(result);
+    }
+    return null;
+    // return context.redisClient.get(PRE_KEY + key);
   },
   async setValue(key, value) {
     let valueStr = value;
