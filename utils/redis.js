@@ -41,7 +41,7 @@ module.exports = {
   },
 
   async getKey(key) {
-    const result = context.redisClient.get(PRE_KEY + key);
+    const result = await context.redisClient.get(PRE_KEY + key);
     if (result) {
       return JSON.parse(result);
     }
