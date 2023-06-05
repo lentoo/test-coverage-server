@@ -4,6 +4,13 @@ const child_process = require('child_process');
 const path = require('path');
 const makeDir = require('make-dir');
 const exec = child_process.exec;
+
+const STATUS = {
+  START: 'START',
+  TESTING: 'TESTING',
+  REPORTER_GENERATION: 'REPORTER_GENERATION', // 报告生成中
+  DONE: 'DONE', // 报告生成中
+};
 function saveData(data, filepath) {
   try {
     fs.writeFileSync(filepath, data);
@@ -58,6 +65,10 @@ function useExec(shell) {
   });
 }
 
+function getTaskKey(taskId) {
+  return `task.${taskId}`;
+}
+
 module.exports = function useRouter(server) {
   // 1. 开始测试
   server.post('/start-collect', async (req, res) => {
@@ -85,7 +96,7 @@ module.exports = function useRouter(server) {
       return;
     }
 
-    await RedisUtils.setValue(`task.${req.body.taskId}`, {
+    await RedisUtils.setValue(getTaskKey(req.body.taskId), {
       ...body,
       status: 'START',
     });
@@ -108,7 +119,8 @@ module.exports = function useRouter(server) {
      *    data: FromNyc  // nyc原本结构
      *  }
      */
-    let taskJson = await RedisUtils.getKey('task.' + req.body.taskId);
+    const taskId = getTaskKey(req.body.taskId);
+    let taskJson = await RedisUtils.getKey(taskId);
     if (!taskJson) {
       res.send({
         message: `taskId ${req.body.taskId} 不存在`,
@@ -118,11 +130,21 @@ module.exports = function useRouter(server) {
       res.end();
       return;
     }
+
     taskJson = JSON.parse(taskJson);
+    if (![STATUS.START, STATUS.TESTING].includes(taskJson.status)) {
+      res.send({
+        message: `taskId ${req.body.taskId} 任务状态 ${taskJson.status} 不可上报`,
+        code: 200,
+        success: false,
+      });
+      res.end();
+      return;
+    }
     console.log(taskJson);
     taskJson.counter = taskJson.counter || 0;
 
-    taskJson.status = 'TESTING'; // 測試中
+    taskJson.status = STATUS.TESTING; // 測試中
 
     const body = req.body;
     const filepath = path.resolve(
@@ -161,12 +183,12 @@ module.exports = function useRouter(server) {
 
     // taskJson.status ='END' // 測試中
     // await RedisUtils.setValue(`task.${req.body.taskId}`, taskJson)
-    taskJson.status = 'REPORTER_GENERATION'; // 报告生成中
+    taskJson.status = STATUS.REPORTER_GENERATION; // 报告生成中
     await RedisUtils.setValue(`task.${req.body.taskId}`, taskJson);
 
     await execMerge(taskJson);
     await execReport(taskJson);
-    taskJson.status = 'DONE'; // 报告生成完成
+    taskJson.status = STATUS.DONE; // 报告生成完成
     await RedisUtils.setValue(`task.${req.body.taskId}`, taskJson);
     res.send({
       message: 'success',
