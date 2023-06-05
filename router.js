@@ -108,29 +108,28 @@ module.exports = function useRouter(server) {
       return;
     }
 
-    const taskKey = getTaskKey(req.body.taskId)
-    const result = await RedisUtils.getKey(taskKey)
+    const taskKey = getTaskKey(req.body.taskId);
+    const result = await RedisUtils.getKey(taskKey);
     if (result) {
       if (result.status === 'DONE') {
         res.send({
           message: `当前task id 已完成`,
           code: 200,
           success: false,
-        })
-        res.send()
-        return
+        });
+        res.send();
+        return;
       }
       res.send({
         message: `当前task id 已存在`,
         code: 200,
         success: false,
-      })
-      res.send()
-      return
+      });
+      res.send();
+      return;
     }
 
-
-    await RedisUtils.setValue(, {
+    await RedisUtils.setValue(taskKey, {
       ...body,
       status: 'START',
     });
@@ -203,7 +202,7 @@ module.exports = function useRouter(server) {
   // 3. 结束测试
 
   server.post('/end-collect', async (req, res) => {
-    const taskKey = getTaskKey(req.body.taskId)
+    const taskKey = getTaskKey(req.body.taskId);
     let taskJson = await RedisUtils.getKey(taskKey);
     if (!taskJson) {
       res.send({
