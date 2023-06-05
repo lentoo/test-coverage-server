@@ -8,6 +8,7 @@ const RedisUtils = require('./utils/redis');
 const useRouter = require('./router');
 
 const server = express();
+const router = express.Router();
 
 const PORT = 8000;
 
@@ -24,10 +25,10 @@ server.use(
 server.use(cors());
 server.use(express.json());
 server.use(express.urlencoded({ extended: false }));
-
 server.listen(PORT, () => {
   console.log(`listening on port ${PORT}`);
   console.log(`Run in the environment ${process.env.NODE_ENV}`);
   RedisUtils.connectRedis();
-  useRouter(server);
+  useRouter(router);
+  server.use('/web-converage', router);
 });

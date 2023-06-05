@@ -1,5 +1,6 @@
 const RedisUtils = require('./utils/redis');
 const fs = require('fs');
+const express = require('express');
 const child_process = require('child_process');
 const path = require('path');
 const makeDir = require('make-dir');
@@ -75,8 +76,14 @@ module.exports = function useRouter(server) {
     res.end();
     return;
   });
+
+  /**
+   * 挂载静态资源
+   */
+  server.use('/reports', express.static('files'));
+
   // 1. 开始测试
-  server.post('/web-converage/start-collect', async (req, res) => {
+  server.post('/start-collect', async (req, res) => {
     /**
    * 平台发送的结构体
    * {
@@ -116,7 +123,7 @@ module.exports = function useRouter(server) {
 
   // 2. 接收数据
 
-  server.post('/web-converage/collect', async (req, res) => {
+  server.post('/collect', async (req, res) => {
     /**
      * // kirin-wxapp/pre/@latest/1664196007_1.json
      *  {
@@ -173,7 +180,7 @@ module.exports = function useRouter(server) {
 
   // 3. 结束测试
 
-  server.post('/web-converage/end-collect', async (req, res) => {
+  server.post('/end-collect', async (req, res) => {
     let taskJson = await RedisUtils.getKey('task.' + req.body.taskId);
     if (!taskJson) {
       res.send({
