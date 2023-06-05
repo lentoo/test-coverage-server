@@ -80,7 +80,7 @@ module.exports = function useRouter(server) {
   /**
    * 挂载静态资源
    */
-  server.use('/reports', express.static('files'));
+  server.use('/reports', express.static(path.join(__dirname, 'files')));
 
   // 1. 开始测试
   server.post('/start-collect', async (req, res) => {
