@@ -31,7 +31,7 @@ server.use(express.urlencoded({ extended: false }));
  * 挂载静态资源
  */
 server.use(
-  '/web-converage/reports',
+  '/web-coverage/reports',
   express.static(path.join(__dirname, './files'))
 );
 server.listen(PORT, () => {
@@ -39,5 +39,5 @@ server.listen(PORT, () => {
   console.log(`Run in the environment ${process.env.NODE_ENV}`);
   RedisUtils.connectRedis();
   useRouter(router);
-  server.use('/web-converage', router);
+  server.use('/web-coverage', router);
 });
